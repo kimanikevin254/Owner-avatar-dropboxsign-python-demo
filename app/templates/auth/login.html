@@ -1,0 +1,31 @@
+{% extends "auth/layout.html" %}
+
+{% block form %}
+<form method="POST" action="" class="space-y-3">   
+    <!-- Email Address -->
+    <div>
+        <label for="email">Email</label>
+        <input id="email" class="block mt-1 w-full focus:outline-none p-2 rounded bg-gray-900 border border-gray-600" type="email" name="email" required autofocus autocomplete="email" />
+    </div>
+
+    <!-- Password -->
+    <div>
+        <label for="password">Password</label>
+        <input id="password" class="block mt-1 w-full focus:outline-none p-2 rounded bg-gray-900 border border-gray-600" type="password" name="password" required autofocus autocomplete="current-password" />
+    </div>
+
+    <!-- Errors -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="text-red-500">
+            {{ messages[0] }}
+        </div>
+    {% endif %}
+    {% endwith %}
+    
+    <div class="flex items-center justify-end mt-4"> 
+        <p>No account? <a href="/signup" class="underline">Sign up</a></p>       
+        <button class="bg-white px-6 py-2 text-gray-900 rounded ml-3">Log In</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "signatureRequests/layout.html" %}
+
+{% block info %}
+
+<div class="m-6 max-w-5xl mx-auto">
+    <h2 class="text-xl font-semibold">Signature Request Details</h2>
+
+    {% if signature_request is defined %}
+        <div class="bg-gray-800 p-4 rounded mt-4 space-y-3">
+            <div>
+                <p>Title</p>
+                <p class="block mt-1 w-full focus:outline-none p-2 rounded bg-gray-900 border border-gray-600">{{ signature_request.title }}</p>
+            </div>
+
+            <div>
+                <p>Description</p>
+                <textarea class="block mt-1 w-full focus:outline-none p-2 rounded bg-gray-900 border border-gray-600" readonly>{{ signature_request.description }}</textarea>
+            </div>
+
+            <div class="flex justify-between space-x-4">
+                <div class="w-1/2">
+                    <p>Initiator</p>
+                    <p class="block mt-1 w-full focus:outline-none p-2 rounded bg-gray-900 border border-gray-600">{{ signature_request.user.name }}</p>
+                </div>
+
+                <div class="w-1/2">
+                    <p>Status</p>
+                    <p class="block mt-1 w-full focus:outline-none p-2 rounded bg-gray-900 border border-gray-600">{{ signature_request.status }}</p>
+                </div>
+            </div>
+
+            <div>
+                <p class="mb-1">Signatories</p>
+                <table class="w-full text-sm text-left rtl:text-right bg-gray-900 text-white">
+                    <thead class="">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Name
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Position
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Email
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="">
+                        {% for signatory in signature_request.signatories %}
+                            <tr class="border-b hover:bg-gray-700">
+                                <th scope="row" class="px-6 py-4 font-medium">
+                                    {{ signatory.name }}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ signatory.position }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ signatory.email }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ signatory.status }}
+                                </td>
+                            </tr>    
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex max-w-xl mx-auto items-center justify-between mt-4">
+                <a href="/" class="px-8 py-2 bg-gray-500 rounded">Back</a>
+                <!-- Show only if the user is a signatory -->
+                {% if sign_url %}
+                    <button onclick="signDoc()" class="px-8 py-2 bg-blue-500 text-white rounded">Sign Document</button>
+                {% endif %}
+            </div>
+
+            <!-- Display document -->
+            <div id="document">
+                <embed src="/uploads/{{ signature_request.document_url }}" type="application/pdf" width="100%" height="800px">
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.hellosign.com/public/js/embedded/v2.11.1/embedded.development.js"></script>
+
+<script>
+    const client = new HelloSign();
+
+    function signDoc() {
+        client.open('{{ sign_url | safe }}', {
+            clientId: '<YOUR-CLIENT-ID>',
+            skipDomainVerification: true,
+            testMode: true
+        });
+    }
+</script>
+
+{% endblock %}
