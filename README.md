@@ -2,7 +2,7 @@
 
 This demo shows how to embed document signing into your Python application using Dropbox Sign API.
 
-It has 2 branches: `starter-template` and `main`. The `starter-template` branch contains the code to follow along with the article while the `main` branch contains the fully implemented application.
+It has 2 branches: `starter-template` and `full-project`. The `starter-template` branch contains the code to follow along with the article while the `full-project` branch contains the fully implemented application.
 
 ## Running the `starter-template` locally
 
