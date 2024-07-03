@@ -21,7 +21,7 @@ def login():
         # Check if all fields are provided
         if not email or not password:
             flash('Please fill out all fields', 'error')
-            return render_template('login.html')
+            return render_template('auth/login.html')
                 
         # Check if user exists and if password is correct
         user = User.query.filter_by(email=email).first()
@@ -52,18 +52,18 @@ def signup():
         # Make sure all fields are provided
         if not name or not email or not password or not confirm_password:
             flash('Please fill out all fields', 'error')
-            return render_template('signup.html')
+            return render_template('auth/signup.html')
         
         # Ensure passwords match
         if password != confirm_password:
             flash('Passwords do not match', 'error')
-            return render_template('signup.html')
+            return render_template('auth/signup.html')
 
         # Check if user is already registred
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email address already exists', 'error')
-            return render_template('signup.html')
+            return render_template('auth/signup.html')
         
         # Create a new user
         new_user = User(
