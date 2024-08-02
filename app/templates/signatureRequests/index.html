@@ -9,55 +9,104 @@
                 <a href="/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Signature Request</a>
             </div>
 
-            <div class="bg-gray-200 rounded-lg p-4">
-                <table class="w-full text-sm text-left rtl:text-right">
-                    <thead class="bg-blue-500 text-white">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Title
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Description
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Initiator
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Status
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
+            <!-- Tabbed Navigation -->
+            <div class="flex mb-4 ml-4">
+                <button class="tab-button bg-blue-500 text-white py-2 px-4 rounded-l" onclick="showTab('sent')">Sent Requests</button>
+                <button class="tab-button bg-gray-300 text-black py-2 px-4" onclick="showTab('received')">Received Requests</button>
+            </div>
 
-                    <tbody class="text-black">
-                        {% if 'all_requests' is defined %}
+            <!-- Sent Requests Table -->
+            <div id="sent" class="tab-content">
+                <div class="bg-gray-200 rounded-lg p-4">
+                    <table class="w-full text-sm text-left rtl:text-right">
+                        <thead class="bg-blue-500 text-white">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Title</th>
+                                <th scope="col" class="px-6 py-3">Description</th>
+                                <th scope="col" class="px-6 py-3">Initiator</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-black">
+                            {% if sent_requests %}
+                                {% for request in sent_requests %}
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <th scope="row" class="px-6 py-4 font-medium">{{ request.title }}</th>
+                                        <td class="px-6 py-4">{{ request.description }}</td>
+                                        <td class="px-6 py-4">{{ request.user.name }}</td>
+                                        <td class="px-6 py-4">{{ request.status }}</td>
+                                        <td class="px-6 py-4">
+                                            <a href="{{ url_for('signature_requests.view', request_id=request.request_id) }}" class="text-blue-500 hover:underline">View</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                            {% for request in all_requests %}    
-                                <tr class="bg-white border-b hover:bg-gray-50">
-                                    <th scope="row" class="px-6 py-4 font-medium">
-                                        {{ request.title }}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        {{ request.description }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ request.user.name }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ request.status }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <a href="{{ url_for('signature_requests.view', request_id=request.request_id) }}" class="text-blue-500 hover:underline">View</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% endif %}
-                    </tbody>
-                </table>
+            <!-- Received Requests Table -->
+            <div id="received" class="tab-content hidden">
+                <div class="bg-gray-200 rounded-lg p-4">
+                    <table class="w-full text-sm text-left rtl:text-right">
+                        <thead class="bg-blue-500 text-white">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Title</th>
+                                <th scope="col" class="px-6 py-3">Description</th>
+                                <th scope="col" class="px-6 py-3">Initiator</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-black">
+                            {% if received_requests %}
+                                {% for request in received_requests %}
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <th scope="row" class="px-6 py-4 font-medium">{{ request.title }}</th>
+                                        <td class="px-6 py-4">{{ request.description }}</td>
+                                        <td class="px-6 py-4">{{ request.user.name }}</td>
+                                        <td class="px-6 py-4">{{ request.status }}</td>
+                                        <td class="px-6 py-4">
+                                            <a href="{{ url_for('signature_requests.view', request_id=request.request_id) }}" class="text-blue-500 hover:underline">View</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function showTab(tabName) {
+        // Select all elements with the class 'tab-content'
+        const tabs = document.querySelectorAll('.tab-content');
+        // Iterate through each tab and add the 'hidden' class
+        tabs.forEach(tab => tab.classList.add('hidden'));
+        // Remove the 'hidden' class from the tab that matches the provided tabName
+        document.getElementById(tabName).classList.remove('hidden');
+
+        // Select all elements with the class 'tab-button'
+        const buttons = document.querySelectorAll('.tab-button');
+        // Iterate through each button to reset their classes
+        buttons.forEach(button => {
+            button.classList.add('bg-gray-300', 'text-black'); // Add inactive state classes
+            button.classList.remove('bg-blue-500', 'text-white'); // Remove active state classes
+        });
+
+        // Find the button corresponding to the current tab and update its classes
+        const activeButton = document.querySelector(`[onclick="showTab('${tabName}')"]`);
+        activeButton.classList.remove('bg-gray-300', 'text-black'); // Remove inactive state classes
+        activeButton.classList.add('bg-blue-500', 'text-white'); // Add active state classes
+    }
+
+    // Default to show sent requests
+    showTab('sent');
+</script>
+
 {% endblock %}
