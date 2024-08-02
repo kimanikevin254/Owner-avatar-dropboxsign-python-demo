@@ -20,13 +20,13 @@ def allowed_file(filename):
 @signature_requests.route('/')
 @login_required
 def index():
-    # Query signature requests where the current user is either the initiator or a signatory
-    all_requests = SignatureRequest.query.filter(
-        (SignatureRequest.initiator_id == current_user.user_id) |  # Initiator
-        (SignatureRequest.signatories.any(Signatory.email == current_user.email))  # Signatory
-    ).all()
-
-    return render_template('signatureRequests/index.html', all_requests=all_requests)
+    # Query signature requests where the current user is the initiator
+    sent_requests = SignatureRequest.query.filter_by(initiator_id=current_user.user_id).all()
+    
+    # Query signature requests where the current user is a signatory
+    received_requests = SignatureRequest.query.filter(SignatureRequest.signatories.any(Signatory.email == current_user.email)).all()
+    
+    return render_template('signatureRequests/index.html', sent_requests=sent_requests, received_requests=received_requests)
 
 # Create a signature request
 @signature_requests.route('/create', methods=['GET', 'POST'])
