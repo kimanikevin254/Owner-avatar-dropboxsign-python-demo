@@ -1,6 +1,6 @@
 blinker==1.8.2
 click==8.1.7
-dropbox-sign==1.4.1
+dropbox-sign==1.6.1
 Flask==3.0.3
 Flask-Login==0.6.3
 Flask-SQLAlchemy==3.1.1
