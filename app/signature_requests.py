@@ -113,11 +113,11 @@ def create():
             )
 
             # Update the signature request reference ID in the DB
-            new_signature_request.reference_id = response['signature_request']['signature_request_id']
+            new_signature_request.reference_id = response.to_dict()['signature_request']['signature_request_id']
             db.session.commit()
 
             # Update the signatories ds_signature_id
-            signatures = response['signature_request']['signatures']
+            signatures = response.to_dict()['signature_request']['signatures']
 
             for signer in signers:
                 for signature in signatures:
@@ -153,7 +153,7 @@ def view(request_id):
     for signatory in signature_request.signatories:
         if signatory.email == current_user.email:
             response = generate_sign_url(signatory.ds_signature_id)
-            sign_url = response['embedded']['sign_url']
+            sign_url = response.to_dict()['embedded']['sign_url']
             break
 
     return render_template('signatureRequests/details.html', signature_request=signature_request, sign_url=sign_url)
